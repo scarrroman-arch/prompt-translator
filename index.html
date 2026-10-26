@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prompt Translator</title>
+  <meta name="description" content="Turn a rough request into a detailed, expert-level prompt any AI can execute almost perfectly." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">⇄</span>
+      <div>
+        <h1>Prompt Translator</h1>
+        <p class="tagline">Say it your way. Get the prompt an expert would write.</p>
+      </div>
+    </div>
+    <button id="settingsBtn" class="btn ghost" type="button">⚙ Settings</button>
+  </header>
+
+  <!-- Settings -->
+  <dialog id="settingsDialog">
+    <form method="dialog" id="settingsForm">
+      <h2>Settings</h2>
+      <label>AI provider
+        <select id="provider"></select>
+      </label>
+      <label id="keyRow">API key
+        <input id="apiKey" type="password" autocomplete="off" placeholder="Paste your API key" />
+        <small>Stored only in this browser and sent only to the provider you choose.</small>
+      </label>
+      <label>Model
+        <input id="model" type="text" autocomplete="off" />
+        <small>Model names change over time — check your provider's docs if you get a "model not found" error.</small>
+      </label>
+      <label id="baseRow">API base URL
+        <input id="baseUrl" type="text" autocomplete="off" placeholder="https://…/v1" />
+      </label>
+      <div class="row end">
+        <button type="button" id="clearKeyBtn" class="btn ghost">Forget key</button>
+        <button type="submit" value="save" class="btn primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <main class="layout">
+    <!-- Input -->
+    <section class="card">
+      <h2>1. What do you want the AI to do?</h2>
+      <textarea id="request" rows="7" placeholder="e.g. make me a website for my bakery that people can order cakes from"></textarea>
+
+      <div class="examples" id="examples" aria-label="Examples"></div>
+
+      <div class="controls">
+        <label>Type of task
+          <select id="target"></select>
+        </label>
+        <label>Detail level
+          <select id="detail">
+            <option value="concise">Concise</option>
+            <option value="detailed" selected>Detailed</option>
+            <option value="maximum">Maximum</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="clarify" />
+        Ask me a few questions first (better results)
+      </label>
+
+      <div id="clarifyBox" class="clarify" hidden>
+        <h3>A few quick questions</h3>
+        <p class="muted">Answer what you can — leave blank to let the translator decide.</p>
+        <div id="questions"></div>
+        <div class="row">
+          <button id="generateBtn" class="btn primary" type="button">Generate prompt</button>
+          <button id="skipBtn" class="btn ghost" type="button">Skip questions</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <button id="translateBtn" class="btn primary big" type="button">Translate ⇄</button>
+        <span class="muted hint">Ctrl/⌘ + Enter</span>
+      </div>
+      <p id="error" class="error" role="alert" hidden></p>
+    </section>
+
+    <!-- Output -->
+    <section class="card">
+      <div class="row between">
+        <h2>2. Your expert prompt</h2>
+        <span id="stats" class="muted"></span>
+      </div>
+      <textarea id="output" rows="18" placeholder="Your translated prompt will appear here. You can edit it before copying." spellcheck="false"></textarea>
+      <div class="row">
+        <button id="copyBtn" class="btn primary" type="button" disabled>Copy</button>
+        <button id="downloadBtn" class="btn ghost" type="button" disabled>Download .md</button>
+      </div>
+
+      <div class="refine">
+        <label for="feedback">Not quite right? Tell it what to change</label>
+        <div class="row">
+          <input id="feedback" type="text" placeholder="e.g. make it shorter, use React, aim it at beginners" />
+          <button id="refineBtn" class="btn ghost" type="button" disabled>Refine</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- History -->
+    <section class="card full">
+      <div class="row between">
+        <h2>History</h2>
+        <button id="clearHistoryBtn" class="btn ghost small" type="button">Clear</button>
+      </div>
+      <ul id="history" class="history"></ul>
+      <p id="historyEmpty" class="muted">Your past translations will show up here (saved in this browser only).</p>
+    </section>
+  </main>
+
+  <footer class="foot muted">Open source · Your API key never leaves your browser except to call the provider you chose.</footer>
+
+  <script src="prompts.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
